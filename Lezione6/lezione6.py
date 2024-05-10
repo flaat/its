@@ -8,25 +8,51 @@ class Persona:
                  name: str, 
                  cognome: str, 
                  data_di_nascita: str,
-                 genere: str) -> None:
+                 genere: str,
+                 codice_fiscale: str) -> None:
         
-        self.nome: str = name
+        self._nome: str = name
         self.cognome: str = cognome
         self.data_di_nascita: str = data_di_nascita
         self.genere: str = genere
+        self.codice_fiscale: str = codice_fiscale
         
     def calcola_eta(self)->int:
         
         return 10
     
+    def __eq__(self, value: object) -> bool:
+        
+        return value.get_name() == self._nome
+
+    @property
+    def cognome(self):
+        
+        return self.cognome
+    
+    @cognome.setter
+    def cognome(self, value: str):
+        
+        self.cognome = value
+
+    def get_nome(self)->str:
+        
+        return self._nome.upper()
+    
+    def set_nome(self, nome: str)->None:
+        
+        
+        self._nome = nome.lower()
     
     
 persona_1: Persona = Persona(name="Flavio", 
                              cognome="Giorgi", 
                              data_di_nascita="24/12/94", 
-                             genere="Maschio")
+                             genere="Maschio",
+                             codice_fiscale="GRGDAS")
 
-
+persona_1._nome  #NON FARE!!!!!!!!!!!
+persona_1.get_nome()
 class Dipendente(Persona):
     
     def __init__(self, 
@@ -34,8 +60,9 @@ class Dipendente(Persona):
                  cognome: str, 
                  data_di_nascita: str, 
                  genere: str,
-                 ore_lavorate: int) -> None:
-        super().__init__(name, cognome, data_di_nascita, genere)
+                 ore_lavorate: int,
+                 codice_fiscale: str) -> None:
+        super().__init__(name, cognome, data_di_nascita, genere, codice_fiscale)
         self.ore_lavorate: int = ore_lavorate
 
         
@@ -45,13 +72,17 @@ class Dipendente(Persona):
 
     def __str__(self) -> str:
         return super().__str__()
+    
+    def __eq__(self, value: object) -> bool:
+        return super().__eq__(value)
 
 
 dipendente_1: Dipendente = Dipendente(name="Flavio", 
                              cognome="Giorgi", 
                              data_di_nascita="24/12/94", 
                              genere="Maschio",
-                             ore_lavorate=500)
+                             ore_lavorate=500,
+                             codice_fiscale="GRGFLV")
 
 
 
@@ -64,19 +95,23 @@ class Professore(Dipendente):
                  genere: str, 
                  ore_lavorate: int,
                  materia_insegnata: str,
-                 ore_di_lezione: int) -> None:
-        super().__init__(name, cognome, data_di_nascita, genere, ore_lavorate)
+                 ore_di_lezione: int,
+                 codice_fiscale: str) -> None:
+        super().__init__(name, cognome, data_di_nascita, genere, ore_lavorate, codice_fiscale)
         
         self.materia_insegnata: str = materia_insegnata
         self.ore_di_lezione: int = ore_di_lezione
         
     def __str__(self) -> str:
-        return super().__str__()
+        return f"Professor {self._nome} {self.cognome}"
+    
+    def __eq__(self, value: object) -> bool:
+        return super().__eq__(value)
 
 print(persona_1.calcola_eta())
 
 print(dipendente_1.ore_lavorate)
-print(dipendente_1.nome)
+print(dipendente_1._nome) #NON FARE!!!
 print(dipendente_1.calcola_eta())
 print(dipendente_1.calcola_stipendio())
 
@@ -88,30 +123,13 @@ professore_1: Professore = Professore(name="Flavio",
                              genere="Maschio",
                              ore_lavorate=500,
                              materia_insegnata="Python",
-                             ore_di_lezione=1000)
+                             ore_di_lezione=1000,
+                             codice_fiscale="GRGFLV")
 
 print(professore_1.ore_di_lezione)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print(str(professore_1))
 
 
 
@@ -126,7 +144,7 @@ class Person:
                  birth_place: str, 
                  gender: str) -> None:
        
-       self._name: str = name 
+       self.__name: str = name 
        self._surname: str = surname
        self._birth_date: str = birth_date
        self._birth_place: str = birth_place
@@ -161,7 +179,7 @@ class Person:
         return: self._name : str, the function returns the person's name
         """
         
-        return self._name
+        return self.__name
     
     def set_name(self, name: str) -> None:
         """
@@ -170,7 +188,7 @@ class Person:
         return: None
         """
         
-        self._name = name.lower()
+        self.__name = name.lower()
         self._ssn = self.compute_ssn()
     
     def compute_ssn(self) -> None:
@@ -178,7 +196,7 @@ class Person:
         Check the ssn's correctness
         """
         
-        first_three_name_char = self._name[:3]
+        first_three_name_char = self.__name[:3]
         last_three_surname_char = self._surname[-3:]
         self._ssn = first_three_name_char.upper() + last_three_surname_char.upper()
 
@@ -227,10 +245,6 @@ class Professore(Dipendente):
     def calcola_orario_lezioni_totale(self):
         
         return self.corso_1 + self.corso_2
-    
-    def __str__(self) -> str:
-        
-        return f"Professor\n{self._surname}\n{self._name}"
     
     
     def __eq__(self, value: object) -> bool:
@@ -284,6 +298,7 @@ except ValueError:
     print("Non puoi avere il nome perchè è schermato!")
 #person_2: Person = Person(name="Valentino", surname="Rossi")
 
+print(person_1.__name)
 #print(person_1)
 
 queue: list[Person] = [person_1]
